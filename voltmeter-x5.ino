@@ -132,51 +132,26 @@ inline void convert_adcs() {
 }
 
 /* Прочитать значения АЦП */
+
+int read_adc(int input) {
+  int x = 0;
+  for (int i = 0; i < NUM_READINGS; i++) {
+    delay(READING_DELAY);
+    x += analogRead(input);
+  }
+  return x / NUM_READINGS;
+}
+
 inline void read_adcs() {
   
   int x = 0;
 
-  x = 0;
-  for (int i = 0; i < NUM_READINGS; i++) {
-    delay(READING_DELAY);
-    x += analogRead(A0);
-  }
-  adcs[0] = x / NUM_READINGS;
-
-  x = 0;
-  for (int i = 0; i < NUM_READINGS; i++) {
-    delay(READING_DELAY);
-    x += analogRead(A1);
-  }
-  adcs[1] = x / NUM_READINGS;
-
-  x = 0;
-  for (int i = 0; i < NUM_READINGS; i++) {
-    delay(READING_DELAY);
-    x += analogRead(A2);
-  }
-  adcs[2] = x / NUM_READINGS;
-
-  x = 0;
-  for (int i = 0; i < NUM_READINGS; i++) {
-    delay(READING_DELAY);
-    x += analogRead(A3);
-  }
-  adcs[3] = x / NUM_READINGS;
-
-  x = 0;
-  for (int i = 0; i < NUM_READINGS; i++) {
-    delay(READING_DELAY);
-    x += analogRead(A6);
-  }
-  adcs[4] = x / NUM_READINGS;
-
-  x = 0;
-  for (int i = 0; i < NUM_READINGS; i++) {
-    delay(READING_DELAY);
-    x += analogRead(A7);
-  }
-  adcs[5] = x / NUM_READINGS;
+  adcs[0] = read_adc(A0);
+  adcs[1] = read_adc(A1);
+  adcs[2] = read_adc(A2);
+  adcs[3] = read_adc(A3);
+  adcs[4] = read_adc(A6);
+  adcs[5] = read_adc(A7);
   
 }
 
