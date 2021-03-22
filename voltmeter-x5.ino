@@ -21,6 +21,7 @@ Adafruit_SSD1306 display(OLED_RESET);
 #define TONE_OUTPUT 3
 #define TONE_FREQ 500
 #define TONE_LENGHT 500
+#define LED_OUTPUT 13
 
 int adcs[6]; // Результаты АЦП
 float tvolt; // Общее напряжение
@@ -29,21 +30,40 @@ float volts[5]; // Напряжения
 void setup() {
   init_screen();
   init_adc();
+  init_led();
 }
 
 void loop() {
   read_adcs();
   convert_adcs();
   refresh_screen();
-  alarm_check();
+  if(alarm_check()) {
+    raise_alarm();
+    blink_led();
+  }
+  else {
+    turn_led_off();
+  }
   delay(700);
 }
 
-/* Проверить и выдать сигнал тревоги */
-inline void alarm_check() {
-  if (volts[0] < VOLT_LIMIT) {
-    tone(TONE_OUTPUT, TONE_FREQ, TONE_LENGHT);
-  }
+/* Проверить сигнал тревоги */
+inline bool alarm_check() {
+  return volts[0] < VOLT_LIMIT;
+}
+
+/* Выдать тональный сигнал тревоги */
+inline void raise_alarm() {
+  tone(TONE_OUTPUT, TONE_FREQ, TONE_LENGHT);
+}
+
+/* Переключать светодиод */
+inline void blink_led() {
+  digitalWrite(LED_OUTPUT, !digitalRead(LED_OUTPUT));
+}
+
+inline void turn_led_off() {
+  digitalWrite(LED_OUTPUT, 0);
 }
 
 /* Обновить экран */
@@ -131,8 +151,7 @@ inline void convert_adcs() {
   }
 }
 
-/* Прочитать значения АЦП */
-
+/* Прочитать и усреднить значение на входе АЦП */
 int read_adc(int input) {
   int x = 0;
   for (int i = 0; i < NUM_READINGS; i++) {
@@ -142,6 +161,7 @@ int read_adc(int input) {
   return x / NUM_READINGS;
 }
 
+/* Прочитать значения АЦП */
 inline void read_adcs() {
   
   int x = 0;
@@ -165,4 +185,9 @@ inline void init_screen() {
 /* Настроить АЦП */
 inline void init_adc() {
 
+}
+
+/* Настроить световую индикацию */
+inline void init_led() {
+  pinMode(LED_OUTPUT, OUTPUT);
 }
