@@ -14,7 +14,7 @@ Adafruit_SSD1306 display(OLED_RESET);
 #define BASE_VOLTAGE 5.0
 #define ADC_RESOLUTION 1024
 
-#define VOLT_THRES 0.1 // Чувствительность для строки состояния
+#define VOLT_THRES 0.1 // Чувствительность отклонения для строки состояния
 
 /* Аварийный сигнал */
 #define VOLT_LIMIT 1.0 // Нижний предел для аварийного сигнала
@@ -23,7 +23,8 @@ Adafruit_SSD1306 display(OLED_RESET);
 #define TONE_LENGHT 500
 
 int adcs[6]; // Результаты АЦП
-float volts[6]; // Напряжения
+float tvolt; // Общее напряжение
+float volts[5]; // Напряжения
 
 void setup() {
   init_screen();
@@ -56,7 +57,7 @@ inline void refresh_screen() {
 
   int i_max, i_min;
   float v_max = 0, v_min = BASE_VOLTAGE;
-  for (int i = 1; i < 6; i++) {
+  for (int i = 0; i < 5; i++) {
     if(volts[i] > v_max) {
       v_max = volts[i];
       i_max = i;
@@ -76,17 +77,21 @@ inline void refresh_screen() {
   display.setCursor(0, 24);
   display.print(make_checkline());
 
-  show_perc();
+  show_perc(vtoperc(tvolt));
   display.display();
   
 }
 
-/* Отобразить заряд в процентах */
-inline void show_perc() {
-  
-  int x = 100*volts[0];
+/* Пересчет напряжения в проценты заряда */
+inline int vtoperc(float v) {
+  int x = 100*v;
   int perc = -0.0116 * x * x + 12.614 * x - 3313;
-  
+  return perc;
+}
+
+/* Отобразить заряд в процентах */
+inline void show_perc(int perc) {
+    
   display.setTextColor(WHITE);
   
   display.setTextSize(4);
@@ -101,13 +106,13 @@ inline void show_perc() {
 inline String make_checkline() {
   
   float sum = 0;
-  for (int i = 1; i < 6; i++) {
+  for (int i = 0; i < 5; i++) {
     sum += volts[i];
   }
   float average = sum / 5;
   
   String check_line = "";
-  for (int i = 1; i < 6; i++) {
+  for (int i = 0; i < 5; i++) {
     if(volts[i] < average - VOLT_THRES)  {
       check_line += String("0");
     }
@@ -120,8 +125,9 @@ inline String make_checkline() {
 
 /* Преобразовать вывод АЦП в напряжения */
 inline void convert_adcs() {
+  tvolt = adcs[0] * BASE_VOLTAGE / ADC_RESOLUTION;
   for(int i = 1; i < 6; i++) {
-    volts[i] = adcs[i] * BASE_VOLTAGE / ADC_RESOLUTION;
+    volts[i-1] = adcs[i] * BASE_VOLTAGE / ADC_RESOLUTION;
   }
 }
 
