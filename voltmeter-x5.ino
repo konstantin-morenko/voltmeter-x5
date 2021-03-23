@@ -179,8 +179,8 @@ inline void read_adcs() {
 /* Включить экран */
 inline void init_screen() {
   display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
-  display.display();
   display.clearDisplay();
+  display.display();
 }
 
 /* Настроить АЦП */
