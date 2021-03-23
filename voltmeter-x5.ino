@@ -23,6 +23,14 @@ Adafruit_SSD1306 display(OLED_RESET);
 #define TONE_LENGHT 500
 #define LED_OUTPUT 13
 
+/* Входы */
+#define VTOTALIN A0
+#define V1IN A1
+#define V2IN A2
+#define V3IN A3
+#define V4IN A6
+#define V5IN A7
+
 int adcs[6]; // Результаты АЦП
 float tvolt; // Общее напряжение
 float volts[5]; // Напряжения
@@ -167,12 +175,12 @@ inline void read_adcs() {
   
   int x = 0;
 
-  adcs[0] = read_adc(A0);
-  adcs[1] = read_adc(A1);
-  adcs[2] = read_adc(A2);
-  adcs[3] = read_adc(A3);
-  adcs[4] = read_adc(A6);
-  adcs[5] = read_adc(A7);
+  adcs[0] = read_adc(VTOTALIN);
+  adcs[1] = read_adc(V1IN);
+  adcs[2] = read_adc(V2IN);
+  adcs[3] = read_adc(V3IN);
+  adcs[4] = read_adc(V4IN);
+  adcs[5] = read_adc(V5IN);
   
 }
 
