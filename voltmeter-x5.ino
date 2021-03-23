@@ -139,6 +139,7 @@ inline String make_checkline() {
     else {
       check_line += String("1");
     }
+    check_line += String(" ");
   }
   return check_line;
 }
