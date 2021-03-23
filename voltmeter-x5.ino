@@ -18,10 +18,12 @@ Adafruit_SSD1306 display(OLED_RESET);
 
 /* Аварийный сигнал */
 #define VOLT_LIMIT 1.0 // Нижний предел для аварийного сигнала
+#define V_TOTAL_LIMIT 1.0 // Нижний предел сигнала суммарного напряжения
 #define TONE_OUTPUT 3
-#define TONE_FREQ 500
 #define TONE_LENGHT 500
 #define LED_OUTPUT 13
+#define TONE_FREQ_TOTAL 500
+#define TONE_FREQ_SINGLE 1000
 
 /* Входы */
 #define VTOTALIN A0
@@ -30,6 +32,15 @@ Adafruit_SSD1306 display(OLED_RESET);
 #define V3IN A3
 #define V4IN A6
 #define V5IN A7
+
+/* Сигнальные светодиоды */
+#define VTOTALLED 13
+#define VLEDSTART 8
+#define V1LED 8
+#define V2LED 9
+#define V3LED 10
+#define V4LED 11
+#define V5LED 12
 
 int adcs[6]; // Результаты АЦП
 float tvolt; // Общее напряжение
@@ -45,24 +56,42 @@ void loop() {
   read_adcs();
   convert_adcs();
   refresh_screen();
-  if(alarm_check()) {
-    raise_alarm();
-    blink_led();
-  }
-  else {
-    turn_led_off();
-  }
+  alarm_check();
   delay(700);
 }
 
 /* Проверить сигнал тревоги */
 inline bool alarm_check() {
-  return volts[0] < VOLT_LIMIT;
+  if(tvolt < V_TOTAL_LIMIT) {
+    blink_led(VTOTALLED);
+    raise_alarm(TONE_FREQ_TOTAL);
+  }
+  else {
+    turn_off_led(VTOTALLED);
+  }
+  for(int i = 0; i < 5; i++) {
+    int led_output = VLEDSTART + i;
+    if(volts[i] < VOLT_LIMIT) {
+      blink_led(led_output);
+      raise_alarm(TONE_FREQ_SINGLE);
+    }
+    else {
+      turn_off_led(led_output);
+    }
+  }
+}
+
+void blink_led(int led) {
+  digitalWrite(led, !digitalRead(led)); // Invert pin
+}
+
+void turn_off_led(int led) {
+  digitalWrite(led, 0);
 }
 
 /* Выдать тональный сигнал тревоги */
-inline void raise_alarm() {
-  tone(TONE_OUTPUT, TONE_FREQ, TONE_LENGHT);
+inline void raise_alarm(int freq) {
+  tone(TONE_OUTPUT, freq, TONE_LENGHT);
 }
 
 /* Переключать светодиод */
