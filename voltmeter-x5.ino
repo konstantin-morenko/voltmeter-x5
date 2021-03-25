@@ -94,15 +94,6 @@ inline void raise_alarm(int freq) {
   tone(TONE_OUTPUT, freq, TONE_LENGHT);
 }
 
-/* Переключать светодиод */
-inline void blink_led() {
-  digitalWrite(LED_OUTPUT, !digitalRead(LED_OUTPUT));
-}
-
-inline void turn_led_off() {
-  digitalWrite(LED_OUTPUT, 0);
-}
-
 /* Обновить экран */
 inline void refresh_screen() {
   display.clearDisplay();
@@ -227,5 +218,4 @@ inline void init_adc() {
 
 /* Настроить световую индикацию */
 inline void init_led() {
-  pinMode(LED_OUTPUT, OUTPUT);
 }
