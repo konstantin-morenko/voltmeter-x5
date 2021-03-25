@@ -161,11 +161,15 @@ inline String make_checkline() {
   
   String check_line = "";
   for (int i = 0; i < 5; i++) {
+    int led_output = VLEDSTART + i;
     if(volts[i] < average - VOLT_THRES)  {
       check_line += String("0");
+      blink_led(led_output);
+      raise_alarm(TONE_FREQ_SINGLE);
     }
     else {
       check_line += String("1");
+      turn_off_led(led_output);
     }
     check_line += String(" ");
   }
