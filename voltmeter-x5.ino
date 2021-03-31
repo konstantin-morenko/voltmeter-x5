@@ -36,11 +36,6 @@ Adafruit_SSD1306 display(OLED_RESET);
 /* Сигнальные светодиоды */
 #define VTOTALLED 13
 #define VLEDSTART 8
-#define V1LED 8
-#define V2LED 9
-#define V3LED 10
-#define V4LED 11
-#define V5LED 12
 
 int adcs[6]; // Результаты АЦП
 float tvolt; // Общее напряжение
