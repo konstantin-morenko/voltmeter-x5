@@ -64,16 +64,6 @@ inline bool alarm_check() {
   else {
     turn_off_led(VTOTALLED);
   }
-  for(int i = 0; i < 5; i++) {
-    int led_output = VLEDSTART + i;
-    if(volts[i] < VOLT_LIMIT) {
-      blink_led(led_output);
-      raise_alarm(TONE_FREQ_SINGLE);
-    }
-    else {
-      turn_off_led(led_output);
-    }
-  }
 }
 
 void blink_led(int led) {
