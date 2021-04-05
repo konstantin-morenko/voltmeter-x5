@@ -86,7 +86,7 @@ inline void refresh_screen() {
   display.setTextColor(WHITE);
 
   display.setCursor(0, 0);
-  display.print(" U="); display.print(volts[0]);
+  display.print(" U="); display.print(tvolt);
 
   int i_max, i_min;
   float v_max = 0, v_min = BASE_VOLTAGE;
