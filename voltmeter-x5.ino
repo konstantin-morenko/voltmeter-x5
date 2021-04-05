@@ -1,4 +1,6 @@
 
+/* ======================================== */
+/* КОНСТАНТЫ */
 
 /* Экран */
 #include <Adafruit_SSD1306.h>
@@ -37,9 +39,14 @@ Adafruit_SSD1306 display(OLED_RESET);
 #define VTOTALLED 5
 #define VLEDSTART 6
 
+/* Глобальные переменные */
 int adcs[6]; // Результаты АЦП
 float tvolt; // Общее напряжение
 float volts[5]; // Напряжения
+
+
+/* ======================================== */
+/* ИНИЦИАЛИЗАЦИЯ */
 
 void setup() {
   init_screen();
@@ -54,6 +61,26 @@ void loop() {
   alarm_check();
   delay(700);
 }
+
+/* Включить экран */
+inline void init_screen() {
+  display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
+  display.clearDisplay();
+  display.display();
+}
+
+/* Настроить АЦП */
+inline void init_adc() {
+
+}
+
+/* Настроить световую индикацию */
+inline void init_led() {
+}
+
+
+/* ======================================== */
+/* СИГНАЛИЗАЦИЯ */
 
 /* Проверить сигнал тревоги */
 inline bool alarm_check() {
@@ -78,6 +105,10 @@ void turn_off_led(int led) {
 inline void raise_alarm(int freq) {
   tone(TONE_OUTPUT, freq, TONE_LENGHT);
 }
+
+
+/* ======================================== */
+/* ИНДИКАЦИЯ */
 
 /* Обновить экран */
 inline void refresh_screen() {
@@ -161,6 +192,10 @@ inline String make_checkline() {
   return check_line;
 }
 
+
+/* ======================================== */
+/* ЧТЕНИЕ ВХОДОВ */
+
 /* Преобразовать вывод АЦП в напряжения */
 inline void convert_adcs() {
   tvolt = adcs[0] * BASE_VOLTAGE / ADC_RESOLUTION;
@@ -191,20 +226,4 @@ inline void read_adcs() {
   adcs[4] = read_adc(V4IN);
   adcs[5] = read_adc(V5IN);
   
-}
-
-/* Включить экран */
-inline void init_screen() {
-  display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
-  display.clearDisplay();
-  display.display();
-}
-
-/* Настроить АЦП */
-inline void init_adc() {
-
-}
-
-/* Настроить световую индикацию */
-inline void init_led() {
 }
