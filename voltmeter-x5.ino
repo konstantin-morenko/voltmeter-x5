@@ -197,11 +197,30 @@ inline String make_checkline() {
 /* ======================================== */
 /* ЧТЕНИЕ ВХОДОВ */
 
+/* Преобразование входного напряжения с учетом преобразователей */
+int v2section_v(float v) {
+  // 0.33 25
+  // 1.24 50
+  // 2.52 75
+  // 3.99 100
+  // 4.80 125
+  return 21.2 * v + 20.3;
+}
+
+int v2total_v(float v) {
+  // 1.61 400
+  // 1.98 450
+  // 2.38 500
+  // 2.78 550
+  // 3.20 600
+  return 125 * v + 200;
+}
+
 /* Преобразовать вывод АЦП в напряжения */
 inline void convert_adcs() {
-  tvolt = adcs[0] * BASE_VOLTAGE / ADC_RESOLUTION;
+  tvolt = v2total_v(adcs[0] * BASE_VOLTAGE / ADC_RESOLUTION);
   for(int i = 1; i < 6; i++) {
-    volts[i-1] = adcs[i] * BASE_VOLTAGE / ADC_RESOLUTION;
+    volts[i-1] = v2section_v(adcs[i] * BASE_VOLTAGE / ADC_RESOLUTION);
   }
 }
 
