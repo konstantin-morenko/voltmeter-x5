@@ -132,11 +132,12 @@ inline void refresh_screen() {
     }
   }
 
+  const int i_shift = 1;
   display.setCursor(0, 8);
-  display.print(String("U" + String(i_min) + String("=") + String(volts[i_min])));
+  display.print(String("U" + String(i_min + i_shift) + String("=") + String(volts[i_min])));
 
   display.setCursor(0, 16);
-  display.print(String("U" + String(i_max) + String("=") + String(volts[i_max])));
+  display.print(String("U" + String(i_max + i_shift) + String("=") + String(volts[i_max])));
 
   display.setCursor(0, 24);
   display.print(make_checkline());
