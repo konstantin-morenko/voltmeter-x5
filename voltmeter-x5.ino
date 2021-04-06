@@ -16,10 +16,9 @@ Adafruit_SSD1306 display(OLED_RESET);
 #define BASE_VOLTAGE 5.0
 #define ADC_RESOLUTION 1024
 
-#define VOLT_THRES 0.1 // Чувствительность отклонения для строки состояния
 
 /* Аварийный сигнал */
-#define VOLT_LIMIT 1.0 // Нижний предел для аварийного сигнала
+#define VOLT_THRES 0.1 // Чувствительность отклонения для строки состояния
 #define V_TOTAL_LIMIT 1.0 // Нижний предел сигнала суммарного напряжения
 #define TONE_OUTPUT 3
 #define TONE_LENGHT 500
@@ -117,7 +116,7 @@ inline void refresh_screen() {
   display.setTextColor(WHITE);
 
   display.setCursor(0, 0);
-  display.print(" U="); display.print(tvolt);
+  display.print(String("Ubat=" + String(tvolt, 0)));
 
   int i_max, i_min;
   float v_max = 0, v_min = BASE_VOLTAGE;
@@ -134,10 +133,10 @@ inline void refresh_screen() {
 
   const int i_shift = 1;
   display.setCursor(0, 8);
-  display.print(String("U" + String(i_min + i_shift) + String("=") + String(volts[i_min])));
+  display.print(String("U" + String(i_min + i_shift) + String("=") + String(volts[i_min], 0)));
 
   display.setCursor(0, 16);
-  display.print(String("U" + String(i_max + i_shift) + String("=") + String(volts[i_max])));
+  display.print(String("U" + String(i_max + i_shift) + String("=") + String(volts[i_max], 0)));
 
   display.setCursor(0, 24);
   display.print(make_checkline());
