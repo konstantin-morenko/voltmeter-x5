@@ -22,7 +22,7 @@ Adafruit_SSD1306 display(OLED_RESET);
 #define V_TOTAL_LIMIT 400 // Нижний предел сигнала суммарного напряжения, задается по входному напряжению до делителя
 #define TONE_OUTPUT 3
 #define TONE_LENGHT 500
-#define LED_OUTPUT 13
+
 #define TONE_FREQ_TOTAL 500
 #define TONE_FREQ_SINGLE 1000
 
@@ -35,8 +35,8 @@ Adafruit_SSD1306 display(OLED_RESET);
 #define V5IN A7
 
 /* Сигнальные светодиоды */
-#define VTOTALLED 5
-#define VLEDSTART 6
+#define VTOTALLED 4
+#define VLEDSTART 5
 
 /* Глобальные переменные */
 int adcs[6]; // Результаты АЦП
@@ -75,6 +75,10 @@ inline void init_adc() {
 
 /* Настроить световую индикацию */
 inline void init_led() {
+  pinMode(VTOTALLED, OUTPUT);
+  for(int i = 0; i < 5; i++) {
+    pinMode(VLEDSTART + i, OUTPUT);
+  }
 }
 
 
