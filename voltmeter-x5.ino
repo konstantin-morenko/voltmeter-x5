@@ -201,13 +201,13 @@ inline String make_checkline() {
 /* ЧТЕНИЕ ВХОДОВ */
 
 /* Преобразование входного напряжения с учетом преобразователей */
-int v2section_v(float v) {
+int v2section_v(float v, float k = 21.2, float b = 20.3) {
   // 0.33 25
   // 1.24 50
   // 2.52 75
   // 3.99 100
   // 4.80 125
-  return 21.2 * v + 20.3;
+  return k * v + b;
 }
 
 int v2total_v(float v) {
@@ -219,12 +219,19 @@ int v2total_v(float v) {
   return 125 * v + 200;
 }
 
+float adc2v(int adc) {
+  return adc * BASE_VOLTAGE / ADC_RESOLUTION;
+}
+
 /* Преобразовать вывод АЦП в напряжения */
 inline void convert_adcs() {
   tvolt = v2total_v(adcs[0] * BASE_VOLTAGE / ADC_RESOLUTION);
-  for(int i = 1; i < 6; i++) {
-    volts[i-1] = v2section_v(adcs[i] * BASE_VOLTAGE / ADC_RESOLUTION);
-  }
+  // Задаются коэффициенты наклона k и высоты b
+  volts[0] = v2section_v(adc2v(adcs[1]), 21.2, 20.3);
+  volts[1] = v2section_v(adc2v(adcs[2]), 21.2, 20.3);
+  volts[2] = v2section_v(adc2v(adcs[3]), 21.2, 20.3);
+  volts[3] = v2section_v(adc2v(adcs[4]), 21.2, 20.3);
+  volts[4] = v2section_v(adc2v(adcs[5]), 21.2, 20.3);
 }
 
 /* Прочитать и усреднить значение на входе АЦП */
