@@ -123,7 +123,7 @@ inline void refresh_screen() {
   display.print(String("Ubat=" + String(tvolt, 0)));
 
   int i_max, i_min;
-  float v_max = 0, v_min = BASE_VOLTAGE;
+  float v_max = 0, v_min = 9999;
   for (int i = 0; i < 5; i++) {
     if(volts[i] > v_max) {
       v_max = volts[i];
@@ -182,7 +182,7 @@ inline String make_checkline() {
   String check_line = "";
   for (int i = 0; i < 5; i++) {
     int led_output = VLEDSTART + i;
-    if(volts[i] < average - VOLT_THRES)  {
+    if(volts[i] < average - VOLT_THRES) {
       check_line += String("0");
       blink_led(led_output);
       raise_alarm(TONE_FREQ_SINGLE);
